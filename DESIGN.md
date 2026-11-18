@@ -1,3 +1,3 @@
-# DESIGN - gameday-p19
+# DESIGN - gameday-echo
 
-> A completer (Claude, prompt 07-design).
+> Journal design tenu dans [`G-DESIGN/DESIGN.md`](G-DESIGN/DESIGN.md) (V3 du 2026-11-18 : direction Sable, 4 pages validées, style verrouillé).

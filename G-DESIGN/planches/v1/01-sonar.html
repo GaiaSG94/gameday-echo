@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Écho — V1 · 01 Sonar</title>
+<style>
+:root{
+  /* Direction 01 — Sonar : la lumière comme seule couleur */
+  --deep:#071a1f; --sonar:#5eead4; --dist:#1f4a52;
+  --deep-2:#0a252c;                       /* centre éclairé de la salle */
+  --ink:#dff5f1; --ink-2:rgba(223,245,241,.64); --ink-3:rgba(223,245,241,.38); --ink-4:rgba(223,245,241,.14);
+  --sans:"Helvetica Neue","Inter","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  /* cadre hôte (feed neutre, sombre) */
+  --feed:#0d1012; --feed-2:#161a1d; --feed-line:#262c30; --feed-ink:#c3cacd; --feed-ink-2:#7d878c;
+  --board:#151719;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--board);}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased;}
+.stage{width:100vw;overflow:hidden}
+.board{width:1974px;height:1100px;padding:40px 48px;transform-origin:0 0;position:relative;color:#cfd6d8}
+
+/* ---------- en-tête de planche ---------- */
+.bh{display:flex;justify-content:space-between;align-items:flex-end;height:64px;margin-bottom:16px}
+.bh p.h{text-transform:none;letter-spacing:.02em;color:#6f7a7f}
+.bh h1{margin:0;font-weight:300;font-size:26px;letter-spacing:.06em;color:#eef3f3}
+.bh h1 b{font-weight:500;color:var(--sonar)}
+.bh p{margin:6px 0 0;font:12px/1 var(--mono);letter-spacing:.08em;color:#8a9599;text-transform:uppercase}
+.sw{display:flex;gap:18px;align-items:center;font:11px/1.3 var(--mono);color:#8a9599}
+.sw i{display:inline-block;width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:8px;border:1px solid #2c3438}
+.frames{display:flex;gap:48px;align-items:flex-start}
+.flabel{font:11px/1 var(--mono);letter-spacing:.1em;color:#6f7a7f;text-transform:uppercase;margin:0 0 8px}
+
+/* ---------- cadres ---------- */
+.desk{width:1440px;height:900px;background:var(--feed);border-radius:10px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.mob{width:390px;height:844px;background:var(--feed);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 0 0 10px #050607,0 30px 80px rgba(0,0,0,.5)}
+
+/* feed hôte (contexte, volontairement neutre) */
+.topbar{height:56px;border-bottom:1px solid var(--feed-line);display:flex;align-items:center;padding:0 20px;gap:16px}
+.hostmark{width:30px;height:30px;border-radius:8px;background:var(--feed-2);border:1px solid var(--feed-line)}
+.search{flex:0 0 560px;margin:0 auto;height:38px;border-radius:19px;background:var(--feed-2);color:var(--feed-ink-2);font-size:14px;display:flex;align-items:center;padding:0 18px}
+.me{width:32px;height:32px;border-radius:50%;background:var(--feed-2);border:1px solid var(--feed-line)}
+.rail{position:absolute;left:0;top:56px;bottom:0;width:248px;border-right:1px solid var(--feed-line);padding:16px 12px;color:var(--feed-ink-2);font-size:14px}
+.rail div{height:38px;display:flex;align-items:center;padding:0 12px;border-radius:8px}
+.rail .on{background:var(--feed-2);color:var(--feed-ink)}
+.rail hr{border:0;border-top:1px solid var(--feed-line);margin:12px 0}
+.rail small{display:block;padding:6px 12px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5e686c}
+.col{position:absolute;left:312px;top:80px;width:760px}
+.side{position:absolute;left:1104px;top:80px;width:304px;background:var(--feed-2);border-radius:14px;padding:18px;color:var(--feed-ink-2);font-size:13px;line-height:1.5}
+.side h4{margin:0 0 6px;color:var(--feed-ink);font-size:14px;font-weight:600}
+.side .k{display:flex;gap:24px;margin-top:14px}
+.side .k b{display:block;color:var(--feed-ink);font-size:16px;font-weight:600}
+.ph{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--feed-ink-2)}
+.ph .sub{color:var(--feed-ink);font-weight:600}
+.ph .av{width:28px;height:28px;border-radius:50%;background:var(--deep);display:grid;place-items:center}
+.pt{font-size:19px;font-weight:600;color:#eef1f2;margin:8px 0 12px;letter-spacing:-.005em}
+.pa{display:flex;gap:10px;margin-top:12px}
+.pa span{height:34px;border-radius:17px;background:var(--feed-2);color:var(--feed-ink);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;padding:0 14px}
+.pa svg{width:16px;height:16px;stroke:var(--feed-ink);fill:none;stroke-width:1.6}
+
+/* mobile hôte */
+.status{height:46px;display:flex;justify-content:space-between;align-items:center;padding:6px 30px 0;color:#eef1f2;font-size:15px;font-weight:600}
+.status .gl{display:flex;gap:6px;align-items:center}
+.status .gl i{display:block;background:#eef1f2;border-radius:2px}
+.appbar{height:48px;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid var(--feed-line);color:var(--feed-ink);font-size:15px;font-weight:600}
+.appbar svg{width:20px;height:20px;stroke:var(--feed-ink);fill:none;stroke-width:1.8}
+.mob .phw{padding:10px 16px 0}
+.mob .pt{font-size:16px;margin:6px 0 10px}
+.mob .pa{padding:0 16px;margin-top:10px}
+
+/* ================= JEU — direction Sonar ================= */
+.g{background:var(--deep);color:var(--ink);border-radius:16px;overflow:hidden;position:relative;font-family:var(--sans)}
+.mob .g{border-radius:0}
+.g-top{display:flex;justify-content:space-between;align-items:center;height:36px}
+.word{font-weight:300;font-size:19px;letter-spacing:.34em;color:var(--ink);text-transform:none}
+.word small{font:11px/1 var(--mono);letter-spacing:.14em;color:var(--ink-3);margin-left:14px;vertical-align:3px}
+.streak{display:flex;align-items:center;gap:10px;font:11px/1 var(--mono);letter-spacing:.12em;color:var(--ink-2);text-transform:uppercase}
+.streak .ticks{display:flex;gap:3px}
+.streak .ticks i{width:3px;height:12px;border-radius:2px;background:var(--sonar);opacity:.85;box-shadow:0 0 6px rgba(94,234,212,.6)}
+.streak .ticks i.off{background:var(--ink-4);box-shadow:none}
+.map{position:relative}
+.map svg{display:block}
+.rule{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-size:12.5px;letter-spacing:.04em;color:var(--ink-2);font-weight:300}
+.rule b{color:var(--ink);font-weight:400}
+.lbl{font:10.5px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.ro{display:grid;grid-template-columns:24px 64px 1fr 64px;align-items:center;gap:10px;height:26px;font:12.5px/1 var(--mono);color:var(--ink-2)}
+.ro .n{color:var(--ink-3)}
+.ro .ms{color:var(--ink)}
+.ro .m{text-align:right;color:var(--sonar)}
+.ro.live .ms,.ro.live .m{color:var(--ink-3)}
+.bar{position:relative;height:12px}
+.bar::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--dist)}
+.bar .t0{position:absolute;left:0;top:2px;width:1px;height:8px;background:var(--ink-3)}
+.bar .tk{position:absolute;top:0;width:2px;height:12px;border-radius:1px;background:var(--sonar);box-shadow:0 0 8px var(--sonar)}
+.bar .sweep{position:absolute;top:0;width:2px;height:12px;background:var(--sonar);opacity:.7;animation:sweep 2.4s linear infinite}
+@keyframes sweep{from{left:0;opacity:.9}to{left:100%;opacity:0}}
+.pings{display:flex;gap:7px;align-items:center}
+.pings i{width:10px;height:10px;border-radius:50%;border:1px solid var(--ink-3)}
+.pings i.used{background:var(--sonar);border-color:var(--sonar);box-shadow:0 0 8px rgba(94,234,212,.55)}
+.pings i.live{border-color:var(--sonar);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 4px rgba(94,234,212,.18)}}
+.cta{height:44px;border-radius:22px;border:1px solid var(--sonar);color:var(--sonar);background:rgba(94,234,212,.06);font:400 14px/1 var(--sans);letter-spacing:.12em;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 0 24px rgba(94,234,212,.12) inset}
+.cta svg{width:14px;height:14px;stroke:var(--sonar);fill:none;stroke-width:1.5}
+.comm{font:11.5px/1.6 var(--mono);color:var(--ink-3)}
+.comm b{color:var(--ink-2);font-weight:400}
+
+/* wide */
+.g.wide{width:760px;height:560px;padding:24px}
+.g.wide .body{display:flex;gap:28px;margin-top:16px}
+.g.wide .panel{flex:1;display:flex;flex-direction:column;padding-top:4px}
+.g.wide .panel .sec{margin-bottom:22px}
+.g.wide .panel .lbl{margin-bottom:10px;display:block}
+.g.wide .panel .push{margin-top:auto}
+/* tall */
+.g.tall{width:390px;height:600px;padding:14px 16px 16px}
+.g.tall .map{margin-top:10px}
+.g.tall .reads{margin-top:10px}
+.g.tall .foot{display:flex;gap:14px;align-items:center;margin-top:12px}
+.g.tall .foot .cta{flex:1}
+
+</style>
+</head>
+<body>
+<div class="stage"><div class="board" id="board">
+  <div class="bh">
+    <div>
+      <h1>Écho · <b>01 Sonar</b></h1>
+      <p>Planche V1 · page Jeu · 1440 × 900 + 390 × 844 · 2026-11-18</p>
+      <p class="h">[H] hypothèses produit (cf. PAGES.md) : 5 pings par salle · salle 10 × 10 m · un seul marqueur. État : 2 échos revenus, le 3ᵉ en écoute.</p>
+    </div>
+    <div class="sw">
+      <span><i style="background:#071a1f"></i>Profond #071a1f</span>
+      <span><i style="background:#5eead4"></i>Sonar #5eead4</span>
+      <span><i style="background:#1f4a52"></i>Distance #1f4a52</span>
+      <span style="font:300 18px var(--sans);letter-spacing:.3em;color:#dff5f1">Aa</span><span>sans large légère</span>
+      <span style="font:15px var(--mono);color:#5eead4">34.3 ms</span><span>mono</span>
+    </div>
+  </div>
+
+  <div class="frames">
+    <div>
+      <p class="flabel">Desktop · 1440 × 900 · post dans le feed</p>
+      <div class="desk">
+        <div class="topbar"><div class="hostmark"></div><div class="search">Search</div><div class="me"></div></div>
+        <div class="rail">
+          <div class="on">Home</div><div>Popular</div><div>Explore</div>
+          <hr><small>Communities</small>
+          <div>r/EchoDaily</div><div>r/dailypuzzles</div><div>r/listening</div>
+        </div>
+        <div class="col">
+          <div class="ph"><span class="av" data-icon></span><span class="sub">r/EchoDaily</span><span>· 3 h</span><span>· u/echo-room</span></div>
+          <div class="pt">Room 014 — find the object by its echoes</div>
+          <div data-game="wide"></div>
+          <div class="pa" data-actions></div>
+        </div>
+        <div class="side">
+          <h4>r/EchoDaily</h4>
+          One room a day, the same for everyone. Ping, listen, find the object. Share how many pings it took.
+          <div class="k"><span><b>1,284</b>playing today</span><span><b>Day 14</b>since launch</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="flabel">Mobile · 390 × 844 · contexte réel du post</p>
+      <div class="mob">
+        <div class="status"><span>9:41</span><span class="gl"><i style="width:17px;height:10px"></i><i style="width:15px;height:10px;opacity:.8"></i><i style="width:24px;height:11px;border-radius:3px"></i></span></div>
+        <div class="appbar"><svg viewBox="0 0 20 20"><path d="M12 4l-6 6 6 6"/></svg>r/EchoDaily</div>
+        <div class="phw">
+          <div class="ph"><span class="av" data-icon></span><span class="sub">r/EchoDaily</span><span>· 3 h</span></div>
+          <div class="pt">Room 014 — find the object by its echoes</div>
+        </div>
+        <div data-game="tall"></div>
+        <div class="pa" data-actions></div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<script>
+/* Données de démo — salle du jour (seed fictif) */
+const ROOM = 10, OBJ = [6.4, 3.1], SOUND = 343;
+const P = [{x:2.0,y:7.0},{x:8.5,y:7.5},{x:4.5,y:2.0,live:true}];
+P.forEach(p => { p.d = Math.hypot(p.x-OBJ[0], p.y-OBJ[1]); p.ms = 2*p.d/SOUND*1000; });
+const MAXMS = 2*ROOM*Math.SQRT2/SOUND*1000; // retard max possible dans la salle
+const pad = n => String(n).padStart(2,'0');
+
+function mapSVG(S, id){
+  const k = S/ROOM, X = v => (v*k).toFixed(1);
+  let s = `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
+  <defs>
+    <radialGradient id="rg${id}" cx="50%" cy="46%" r="70%"><stop offset="0" stop-color="#0c2e35"/><stop offset="1" stop-color="#071a1f"/></radialGradient>
+    <filter id="gl${id}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="cp${id}"><rect width="${S}" height="${S}" rx="10"/></clipPath>
+  </defs>
+  <rect width="${S}" height="${S}" rx="10" fill="url(#rg${id})" stroke="rgba(94,234,212,.16)"/>
+  <g clip-path="url(#cp${id})">`;
+  for (let i=1;i<ROOM;i++) for (let j=1;j<ROOM;j++) s += `<circle cx="${X(i)}" cy="${X(j)}" r="1" fill="#5eead4" opacity=".14"/>`;
+  P.filter(p=>!p.live).forEach((p,i) => {
+    [.25,.5,.75].forEach((f,n) => s += `<circle cx="${X(p.x)}" cy="${X(p.y)}" r="${X(p.d*f)}" fill="none" stroke="#5eead4" stroke-width="1" opacity="${[.22,.13,.07][n]}"/>`);
+    s += `<circle cx="${X(p.x)}" cy="${X(p.y)}" r="${X(p.d)}" fill="none" stroke="#5eead4" stroke-width="1.3" stroke-dasharray="2 5" opacity=".7" filter="url(#gl${id})"/>`;
+  });
+  const L = P.find(p=>p.live);
+  [0,.8,1.6].forEach(b => s += `<circle cx="${X(L.x)}" cy="${X(L.y)}" r="0" fill="none" stroke="#5eead4" stroke-width="1.1" opacity="0">
+     <animate attributeName="r" values="0;${X(ROOM*1.2)}" dur="2.4s" begin="${b}s" repeatCount="indefinite"/>
+     <animate attributeName="opacity" values=".7;0" dur="2.4s" begin="${b}s" repeatCount="indefinite"/></circle>`);
+  s += `</g>`;
+  P.forEach((p,i) => {
+    s += `<circle cx="${X(p.x)}" cy="${X(p.y)}" r="4.5" fill="#5eead4" filter="url(#gl${id})"/>
+          <text x="${(p.x*k+10).toFixed(1)}" y="${(p.y*k-9).toFixed(1)}" font-family="ui-monospace,Menlo,monospace" font-size="10.5" letter-spacing="1.2" fill="rgba(223,245,241,.55)">${pad(i+1)}</text>`;
+    if(!p.live){
+      const ly = Math.max(16, p.y*k - p.d*k + 16);
+      s += `<text x="${X(p.x)}" y="${ly.toFixed(1)}" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#5eead4" opacity=".9">${p.d.toFixed(2)} m</text>`;
+    }
+  });
+  s += `<text x="${S-10}" y="18" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="9.5" letter-spacing="1" fill="rgba(223,245,241,.28)">10 × 10 M</text></svg>`;
+  return s;
+}
+function readouts(){
+  return P.map((p,i) => `<div class="ro${p.live?' live':''}"><span class="n">${pad(i+1)}</span>
+    <span class="ms">${p.live?'— ms':p.ms.toFixed(1)+' ms'}</span>
+    <span class="bar"><span class="t0"></span>${p.live?'<span class="sweep"></span>':`<span class="tk" style="left:${(p.ms/MAXMS*100).toFixed(1)}%"></span>`}</span>
+    <span class="m">${p.live?'listening':p.d.toFixed(2)+' m'}</span></div>`).join('');
+}
+const pings = () => `<div class="pings">${[0,1,2,3,4].map(i=>`<i class="${i<2?'used':i==2?'live':''}"></i>`).join('')}</div>`;
+const topBar = () => `<div class="g-top"><div class="word">Écho<small>ROOM 014 · NOV 18</small></div>
+  <div class="streak">Streak 6<span class="ticks">${[1,1,1,1,1,1,0].map(t=>`<i class="${t?'':'off'}"></i>`).join('')}</span></div></div>`;
+const cta = `<div class="cta"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="1.5"/></svg>MARK THE OBJECT</div>`;
+const rule = `<div class="rule">Tap to ping. <b>The later the echo, the farther the object.</b></div>`;
+
+function game(mode){
+  if(mode==='wide') return `<div class="g wide">${topBar()}
+    <div class="body"><div class="map">${mapSVG(432,'w')}${rule}</div>
+      <div class="panel">
+        <div class="sec"><span class="lbl">Echoes · delay → distance</span>${readouts()}</div>
+        <div class="sec"><span class="lbl">Pings · 3 of 5</span>${pings()}</div>
+        <div class="sec comm"><b>1,284</b> listening today<br>median <b>4 pings</b> · best <b>0.3 m</b> off</div>
+        <div class="push">${cta}</div>
+      </div></div></div>`;
+  return `<div class="g tall">${topBar()}
+    <div class="map">${mapSVG(358,'t')}${rule}</div>
+    <div class="reads">${readouts()}</div>
+    <div class="foot">${pings()}${cta}</div></div>`;
+}
+const icon = `<svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="2" fill="#5eead4"/><circle cx="9" cy="9" r="5" fill="none" stroke="#5eead4" opacity=".6"/><circle cx="9" cy="9" r="8" fill="none" stroke="#5eead4" opacity=".3"/></svg>`;
+const actions = `<span><svg viewBox="0 0 16 16"><path d="M8 3l5 6H3z"/></svg>1.2k<svg viewBox="0 0 16 16"><path d="M8 13l5-6H3z"/></svg></span>
+  <span><svg viewBox="0 0 16 16"><path d="M2 3h12v8H6l-4 3z"/></svg>318</span>
+  <span><svg viewBox="0 0 16 16"><path d="M9 3l5 5-5 5M14 8H3"/></svg>Share</span>`;
+document.querySelectorAll('[data-game]').forEach(el => el.outerHTML = game(el.dataset.game));
+document.querySelectorAll('[data-icon]').forEach(el => el.innerHTML = icon);
+document.querySelectorAll('[data-actions]').forEach(el => el.innerHTML = actions);
+
+/* mise à l'échelle de la planche dans la fenêtre */
+function fit(){ const b=document.getElementById('board'), s=Math.min(1, innerWidth/1974);
+  b.style.transform=`scale(${s})`; b.parentElement.style.height=(1100*s)+'px'; }
+addEventListener('resize', fit); fit();
+</script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Écho — V1 · 03 Carte</title>
+<style>
+:root{
+  /* Direction 03 — Carte : relevé à l'encre sur papier (s'écarte de la direction de départ) */
+  --paper:#ece6d8; --paper-2:#e3dccb; --inkc:#1c242b; --red:#e0452b; --sonar:#e0452b;
+  --ink:#1c242b; --ink-2:rgba(28,36,43,.66); --ink-3:rgba(28,36,43,.42); --ink-4:rgba(28,36,43,.12);
+  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+  --sans:"Helvetica Neue","Inter","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  --feed:#fbfbfa; --feed-2:#eef0f1; --feed-line:#e0e3e5; --feed-ink:#1f2326; --feed-ink-2:#6b7378;
+  --board:#d6d1c6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--board);}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased;}
+.stage{width:100vw;overflow:hidden}
+.board{width:1974px;height:1100px;padding:40px 48px;transform-origin:0 0;position:relative;color:#cfd6d8}
+
+/* ---------- en-tête de planche ---------- */
+.bh{display:flex;justify-content:space-between;align-items:flex-end;height:64px;margin-bottom:16px}
+.bh p.h{text-transform:none;letter-spacing:.02em;color:#6f7a7f}
+.bh h1{margin:0;font-weight:300;font-size:26px;letter-spacing:.06em;color:#eef3f3}
+.bh h1 b{font-weight:500;color:var(--sonar)}
+.bh p{margin:6px 0 0;font:12px/1 var(--mono);letter-spacing:.08em;color:#8a9599;text-transform:uppercase}
+.sw{display:flex;gap:18px;align-items:center;font:11px/1.3 var(--mono);color:#8a9599}
+.sw i{display:inline-block;width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:8px;border:1px solid #2c3438}
+.frames{display:flex;gap:48px;align-items:flex-start}
+.flabel{font:11px/1 var(--mono);letter-spacing:.1em;color:#6f7a7f;text-transform:uppercase;margin:0 0 8px}
+
+/* ---------- cadres ---------- */
+.desk{width:1440px;height:900px;background:var(--feed);border-radius:10px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.mob{width:390px;height:844px;background:var(--feed);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 0 0 10px #050607,0 30px 80px rgba(0,0,0,.5)}
+
+/* feed hôte (contexte, volontairement neutre) */
+.topbar{height:56px;border-bottom:1px solid var(--feed-line);display:flex;align-items:center;padding:0 20px;gap:16px}
+.hostmark{width:30px;height:30px;border-radius:8px;background:var(--feed-2);border:1px solid var(--feed-line)}
+.search{flex:0 0 560px;margin:0 auto;height:38px;border-radius:19px;background:var(--feed-2);color:var(--feed-ink-2);font-size:14px;display:flex;align-items:center;padding:0 18px}
+.me{width:32px;height:32px;border-radius:50%;background:var(--feed-2);border:1px solid var(--feed-line)}
+.rail{position:absolute;left:0;top:56px;bottom:0;width:248px;border-right:1px solid var(--feed-line);padding:16px 12px;color:var(--feed-ink-2);font-size:14px}
+.rail div{height:38px;display:flex;align-items:center;padding:0 12px;border-radius:8px}
+.rail .on{background:var(--feed-2);color:var(--feed-ink)}
+.rail hr{border:0;border-top:1px solid var(--feed-line);margin:12px 0}
+.rail small{display:block;padding:6px 12px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5e686c}
+.col{position:absolute;left:312px;top:80px;width:760px}
+.side{position:absolute;left:1104px;top:80px;width:304px;background:var(--feed-2);border-radius:14px;padding:18px;color:var(--feed-ink-2);font-size:13px;line-height:1.5}
+.side h4{margin:0 0 6px;color:var(--feed-ink);font-size:14px;font-weight:600}
+.side .k{display:flex;gap:24px;margin-top:14px}
+.side .k b{display:block;color:var(--feed-ink);font-size:16px;font-weight:600}
+.ph{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--feed-ink-2)}
+.ph .sub{color:var(--feed-ink);font-weight:600}
+.ph .av{width:28px;height:28px;border-radius:50%;background:var(--deep);display:grid;place-items:center}
+.pt{font-size:19px;font-weight:600;color:#eef1f2;margin:8px 0 12px;letter-spacing:-.005em}
+.pa{display:flex;gap:10px;margin-top:12px}
+.pa span{height:34px;border-radius:17px;background:var(--feed-2);color:var(--feed-ink);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;padding:0 14px}
+.pa svg{width:16px;height:16px;stroke:var(--feed-ink);fill:none;stroke-width:1.6}
+
+/* mobile hôte */
+.status{height:46px;display:flex;justify-content:space-between;align-items:center;padding:6px 30px 0;color:#eef1f2;font-size:15px;font-weight:600}
+.status .gl{display:flex;gap:6px;align-items:center}
+.status .gl i{display:block;background:#eef1f2;border-radius:2px}
+.appbar{height:48px;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid var(--feed-line);color:var(--feed-ink);font-size:15px;font-weight:600}
+.appbar svg{width:20px;height:20px;stroke:var(--feed-ink);fill:none;stroke-width:1.8}
+.mob .phw{padding:10px 16px 0}
+.mob .pt{font-size:16px;margin:6px 0 10px}
+.mob .pa{padding:0 16px;margin-top:10px}
+
+/* hôte clair : surcharges de la planche */
+.board{color:#3a3f43}
+.bh h1{color:#1c242b}.bh p{color:#6f6a60}.bh p.h{color:#857f73}.flabel{color:#857f73}.sw{color:#6f6a60}.sw i{border-color:#b9b2a4}
+.desk{box-shadow:0 30px 70px rgba(60,50,30,.18)}
+.mob{box-shadow:0 0 0 10px #1c1d1f,0 30px 70px rgba(60,50,30,.25)}
+.status{color:#1c242b}.status .gl i{background:#1c242b}
+.pt{color:#14181b}
+.ph .av{background:var(--paper)}
+
+/* ================= JEU — direction Carte ================= */
+.g{background:var(--paper);color:var(--ink);border-radius:14px;overflow:hidden;position:relative;font-family:var(--sans)}
+.mob .g{border-radius:0}
+.g-top{display:flex;justify-content:space-between;align-items:baseline;height:36px;border-bottom:1px solid var(--ink-4)}
+.word{font:italic 400 27px/1 var(--serif);letter-spacing:-.01em}
+.word small{font:12px/1 var(--sans);font-style:normal;color:var(--ink-2);margin-left:12px;letter-spacing:.01em}
+.streak{display:flex;align-items:center;gap:8px;font:12px/1 var(--sans);color:var(--ink-2)}
+.streak b{font:600 13px var(--sans);color:var(--ink)}
+.cal{display:flex;gap:3px}
+.cal i{width:9px;height:9px;background:var(--ink)}
+.cal i.off{background:none;outline:1px solid var(--ink-3);outline-offset:-1px}
+.map{position:relative}
+.map svg{display:block}
+.led{width:100%;border-collapse:collapse;font:13px/1 var(--mono)}
+.led th{font:11px/1 var(--sans);text-align:left;color:var(--ink-3);font-weight:500;letter-spacing:.04em;padding:0 0 8px;border-bottom:1px solid var(--ink)}
+.led td{padding:9px 0;border-bottom:1px solid var(--ink-4);color:var(--ink)}
+.led td.n{font:italic 15px/1 var(--serif);color:var(--ink-2);width:30px}
+.led td.r{text-align:right}
+.led td.big{font:500 17px/1 var(--serif)}
+.led tr.live td{color:var(--red)}
+.led tr.live td.big{font:italic 15px/1 var(--serif)}
+.cta{height:46px;border-radius:6px;background:var(--ink);color:var(--paper);font:600 14px/1 var(--sans);letter-spacing:.01em;display:flex;align-items:center;justify-content:center;gap:10px}
+.cta i{width:10px;height:10px;border:1.5px solid var(--red);border-radius:50%}
+.rule{font:italic 15px/1.35 var(--serif);color:var(--ink-2)}
+.rule b{font-weight:400;color:var(--ink)}
+.pk{font:12px/1 var(--sans);color:var(--ink-2);display:flex;gap:8px;align-items:center}
+.pk .dots{display:flex;gap:4px}
+.pk .dots i{width:8px;height:8px;border-radius:50%;border:1px solid var(--ink)}
+.pk .dots i.u{background:var(--ink)}
+.pk .dots i.l{border-color:var(--red);background:var(--red);animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.note{font:12px/1.5 var(--sans);color:var(--ink-3)}
+.note b{color:var(--ink);font-weight:600}
+/* wide */
+.g.wide{width:760px;height:560px;padding:20px 26px 24px}
+.g.wide .body{display:flex;gap:28px;margin-top:16px}
+.g.wide .panel{flex:1;display:flex;flex-direction:column;gap:18px}
+.g.wide .panel .push{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+/* tall */
+.g.tall{width:390px;height:600px;padding:12px 16px 16px}
+.g.tall .word{font-size:24px}
+.g.tall .map{margin-top:8px;display:flex;justify-content:center}
+.g.tall .led{margin-top:6px}
+.g.tall .led td{padding:6px 0}
+.g.tall .foot{display:flex;gap:14px;align-items:center;margin-top:10px}
+.g.tall .foot .cta{flex:1}
+
+</style>
+</head>
+<body>
+<div class="stage"><div class="board" id="board">
+  <div class="bh">
+    <div>
+      <h1>Écho · <b>03 Carte</b></h1>
+      <p>Planche V1 · page Jeu · 1440 × 900 + 390 × 844 · 2026-11-18</p>
+      <p class="h">[H] hypothèses produit (cf. PAGES.md) : 5 pings par salle · salle 10 × 10 m · un seul marqueur. État : 2 échos revenus, le 3ᵉ en écoute.</p>
+    </div>
+    <div class="sw">
+      <span><i style="background:#ece6d8"></i>Papier #ece6d8</span>
+      <span><i style="background:#1c242b"></i>Encre #1c242b</span>
+      <span><i style="background:#e0452b"></i>Vermillon #e0452b</span>
+      <span style="font:italic 24px var(--serif);color:#1c242b">Écho</span><span>serif de texte</span>
+      <span style="font:14px var(--mono);color:#1c242b">5.88 m</span><span>mono</span>
+    </div>
+  </div>
+
+  <div class="frames">
+    <div>
+      <p class="flabel">Desktop · 1440 × 900 · post dans le feed</p>
+      <div class="desk">
+        <div class="topbar"><div class="hostmark"></div><div class="search">Search</div><div class="me"></div></div>
+        <div class="rail">
+          <div class="on">Home</div><div>Popular</div><div>Explore</div>
+          <hr><small>Communities</small>
+          <div>r/EchoDaily</div><div>r/dailypuzzles</div><div>r/listening</div>
+        </div>
+        <div class="col">
+          <div class="ph"><span class="av" data-icon></span><span class="sub">r/EchoDaily</span><span>· 3 h</span><span>· u/echo-room</span></div>
+          <div class="pt">Room 014 — find the object by its echoes</div>
+          <div data-game="wide"></div>
+          <div class="pa" data-actions></div>
+        </div>
+        <div class="side">
+          <h4>r/EchoDaily</h4>
+          One room a day, the same for everyone. Ping, listen, find the object. Share how many pings it took.
+          <div class="k"><span><b>1,284</b>playing today</span><span><b>Day 14</b>since launch</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="flabel">Mobile · 390 × 844 · contexte réel du post</p>
+      <div class="mob">
+        <div class="status"><span>9:41</span><span class="gl"><i style="width:17px;height:10px"></i><i style="width:15px;height:10px;opacity:.8"></i><i style="width:24px;height:11px;border-radius:3px"></i></span></div>
+        <div class="appbar"><svg viewBox="0 0 20 20"><path d="M12 4l-6 6 6 6"/></svg>r/EchoDaily</div>
+        <div class="phw">
+          <div class="ph"><span class="av" data-icon></span><span class="sub">r/EchoDaily</span><span>· 3 h</span></div>
+          <div class="pt">Room 014 — find the object by its echoes</div>
+        </div>
+        <div data-game="tall"></div>
+        <div class="pa" data-actions></div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<script>
+/* Données de démo — salle du jour (seed fictif) */
+const ROOM = 10, OBJ = [6.4, 3.1], SOUND = 343;
+const P = [{x:2.0,y:7.0},{x:8.5,y:7.5},{x:4.5,y:2.0,live:true}];
+P.forEach(p => { p.d = Math.hypot(p.x-OBJ[0], p.y-OBJ[1]); p.ms = 2*p.d/SOUND*1000; });
+const pad = n => String(n).padStart(2,'0');
+const MONO = 'ui-monospace,Menlo,monospace', SERIF = 'Iowan Old Style,Palatino Linotype,Georgia,serif';
+const INK = '#1c242b', RED = '#e0452b';
+
+function mapSVG(S, id){
+  const o = 18, R = S - o - 2, k = R/ROOM, X = v => (o + v*k).toFixed(1), Y = X;
+  let s = `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}"><defs><clipPath id="cp${id}"><rect x="${o}" y="${o}" width="${R}" height="${R}"/></clipPath>
+    <pattern id="ht${id}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="${INK}" stroke-opacity=".10" stroke-width="1"/></pattern></defs>`;
+  // règles graduées (haut et gauche), comme une carte de relevé
+  for (let i=0;i<=ROOM*2;i++){ const t = i%2===0 ? 7 : 4, v = o + i*k/2;
+    s += `<line x1="${v.toFixed(1)}" y1="${o}" x2="${v.toFixed(1)}" y2="${o-t}" stroke="${INK}" stroke-width="1" opacity=".55"/>
+          <line x1="${o}" y1="${v.toFixed(1)}" x2="${o-t}" y2="${v.toFixed(1)}" stroke="${INK}" stroke-width="1" opacity=".55"/>`; }
+  [0,5,10].forEach(m => s += `<text x="${X(m)}" y="8" text-anchor="${m?m===10?'end':'middle':'start'}" font-family="${MONO}" font-size="8.5" fill="${INK}" opacity=".55">${m}</text>`);
+  s += `<rect x="${o}" y="${o}" width="${R}" height="${R}" fill="#f2ede1" stroke="${INK}" stroke-width="1.2"/>`;
+  for (let i=1;i<ROOM;i++) s += `<line x1="${X(i)}" y1="${o}" x2="${X(i)}" y2="${o+R}" stroke="${INK}" stroke-opacity=".06"/><line x1="${o}" y1="${Y(i)}" x2="${o+R}" y2="${Y(i)}" stroke="${INK}" stroke-opacity=".06"/>`;
+  s += `<g clip-path="url(#cp${id})">`;
+  // zone écartée : ce que les deux cercles excluent ensemble (hachure discrète, aide de lecture)
+  P.filter(p=>!p.live).forEach((p,i) => {
+    const a = i ? -2.2 : -1.0, ex = p.x + p.d*Math.cos(a), ey = p.y + p.d*Math.sin(a);
+    s += `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="${(p.d*k).toFixed(1)}" fill="none" stroke="${INK}" stroke-width="1.1"/>
+      <line x1="${X(p.x)}" y1="${Y(p.y)}" x2="${X(ex)}" y2="${Y(ey)}" stroke="${INK}" stroke-width=".8" stroke-dasharray="3 3" opacity=".6"/>
+      <text x="${X((p.x+ex)/2)}" y="${Y((p.y+ey)/2)}" dx="6" font-family="${MONO}" font-size="10.5" fill="${INK}">r ${p.d.toFixed(2)}</text>`;
+  });
+  const L = P.find(p=>p.live);
+  [0,1.2].forEach(b => s += `<circle cx="${X(L.x)}" cy="${Y(L.y)}" r="0" fill="none" stroke="${RED}" stroke-width="1.3" opacity="0">
+     <animate attributeName="r" values="0;${(ROOM*1.2*k).toFixed(1)}" dur="2.4s" begin="${b}s" repeatCount="indefinite"/>
+     <animate attributeName="opacity" values="1;0" dur="2.4s" begin="${b}s" repeatCount="indefinite"/></circle>`);
+  s += `</g>`;
+  P.forEach((p,i) => { const c = p.live ? RED : INK;
+    s += `<path d="M${X(p.x)-6} ${Y(p.y)}h12M${X(p.x)} ${Y(p.y)-6}v12" stroke="${c}" stroke-width="1.3"/>
+      <circle cx="${X(p.x)}" cy="${Y(p.y)}" r="2.4" fill="${c}"/>
+      <text x="${(+X(p.x)+8).toFixed(1)}" y="${(+Y(p.y)+16).toFixed(1)}" font-family="${SERIF}" font-style="italic" font-size="13" fill="${c}">${i+1}</text>`; });
+  s += `</svg>`;
+  return s;
+}
+const ledger = () => `<table class="led"><tr><th></th><th>Echo delay</th><th class="r" style="text-align:right">Distance</th></tr>
+  ${P.map((p,i)=>`<tr class="${p.live?'live':''}"><td class="n">${i+1}</td><td>${p.live?'—':p.ms.toFixed(1)+' ms'}</td><td class="r big">${p.live?'listening…':p.d.toFixed(2)+' m'}</td></tr>`).join('')}</table>`;
+const topBar = (m) => `<div class="g-top"><span class="word">Écho<small>Room 014 · ${m==='tall'?'18 Nov':'Wed 18 Nov'}</small></span>
+  <span class="streak"><b>6</b>${m==='tall'?'days':'day streak'}<span class="cal">${[1,1,1,1,1,1,0].map(t=>`<i class="${t?'':'off'}"></i>`).join('')}</span></span></div>`;
+const cta = `<div class="cta"><i></i>Mark the object</div>`;
+const pk = `<span class="pk">Pings<span class="dots">${[0,1,2,3,4].map(i=>`<i class="${i<2?'u':i==2?'l':''}"></i>`).join('')}</span>3 / 5</span>`;
+const rule = `<div class="rule">Tap the room to ping. <b>The later the echo, the farther the object.</b></div>`;
+
+function game(mode){
+  if(mode==='wide') return `<div class="g wide">${topBar(mode)}
+    <div class="body"><div class="map">${mapSVG(440,'w')}</div>
+      <div class="panel">${rule}${ledger()}${pk}
+        <div class="push"><div class="note"><b>1,284</b> people listened to this room today. Median: <b>4 pings</b>.</div>${cta}</div>
+      </div></div></div>`;
+  return `<div class="g tall">${topBar(mode)}
+    <div class="map">${mapSVG(336,'t')}</div>
+    <div class="rule" style="font-size:13.5px;margin-top:6px">Tap the room to ping. <b>The later the echo, the farther the object.</b></div>
+    ${ledger()}
+    <div class="foot">${pk}${cta}</div></div>`;
+}
+const icon = `<svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="2" fill="#e0452b"/><circle cx="9" cy="9" r="5" fill="none" stroke="#e0452b" opacity=".6"/><circle cx="9" cy="9" r="8" fill="none" stroke="#e0452b" opacity=".3"/></svg>`;
+const actions = `<span><svg viewBox="0 0 16 16"><path d="M8 3l5 6H3z"/></svg>1.2k<svg viewBox="0 0 16 16"><path d="M8 13l5-6H3z"/></svg></span>
+  <span><svg viewBox="0 0 16 16"><path d="M2 3h12v8H6l-4 3z"/></svg>318</span>
+  <span><svg viewBox="0 0 16 16"><path d="M9 3l5 5-5 5M14 8H3"/></svg>Share</span>`;
+document.querySelectorAll('[data-game]').forEach(el => el.outerHTML = game(el.dataset.game));
+document.querySelectorAll('[data-icon]').forEach(el => el.innerHTML = icon);
+document.querySelectorAll('[data-actions]').forEach(el => el.innerHTML = actions);
+
+/* mise à l'échelle de la planche dans la fenêtre */
+function fit(){ const b=document.getElementById('board'), s=Math.min(1, innerWidth/1974);
+  b.style.transform=`scale(${s})`; b.parentElement.style.height=(1100*s)+'px'; }
+addEventListener('resize', fit); fit();
+</script>
+</body>
+</html>
